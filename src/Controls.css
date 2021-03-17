@@ -1,0 +1,9 @@
+.MuiSlider-thumb {
+  z-index: -1;
+}
+/* .MuiSlider-rail {
+  height: 4px !important;
+}
+.MuiSlider-rail:hover {
+  height: 6px !important;
+} */

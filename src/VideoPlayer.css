@@ -1,0 +1,8 @@
+.player {
+  margin: auto;
+  width: 50vw;
+}
+.player__video {
+  display: block;
+  width: 50vw;
+}

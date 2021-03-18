@@ -1,106 +1,142 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "./Controls.css";
 import PlayCircleFilledIcon from "@material-ui/icons/PlayCircleFilled";
-import SkipNextIcon from "@material-ui/icons/SkipNext";
 import VolumeUpIcon from "@material-ui/icons/VolumeUp";
 import SettingsIcon from "@material-ui/icons/Settings";
 import FullscreenIcon from "@material-ui/icons/Fullscreen";
-import { Slider, Tooltip, IconButton } from "@material-ui/core";
+import PauseCircleFilledIcon from "@material-ui/icons/PauseCircleFilled";
+import {
+  Slider,
+  Tooltip,
+  IconButton,
+  Grid,
+  Menu,
+  MenuItem,
+  Select,
+} from "@material-ui/core";
 import { useStore } from "./store";
 import { observer } from "mobx-react-lite";
 
-const Controls = () => {
-  const [value, setValue] = useState(0);
-  const hoverRef = useRef(null);
+const Controls = observer(() => {
+  // useEffect(() => {
+  //   window.addEventListener("keydown", (event) => {
+  //     console.log(event.key);
+  //   });
+  // }, []);
+
+  const speedOptions = [0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2];
   const store = useStore();
-  const [currentTime, setCurrentTime] = useState(0);
+  const [volumeValue, setVolumeValue] = useState(100);
+  const [settingsAnchor, setSettingsAnchor] = useState(null);
 
-  const calcTime = (seconds) => {
-    let data = new Date(seconds).toISOString();
-
-    let hours = data.substr(11, 2);
-    let mins = data.substr(14, 2);
-    let secs = data.substr(17, 2);
-
-    //11-12 ora
-    //14-15 min
-    //17-18 sec
-    if (hours === "00" && mins === "00") {
-      setCurrentTime(data.substr(15, 4));
-    } else if (hours === "00" && mins !== "00") {
-      setCurrentTime(data.substr(14, 5));
-    } else if (hours !== "00") {
-      setCurrentTime(data.substr(11, 8));
+  const activateFullscreen = (element) => {
+    if (element.requestFullscreen) {
+      element.requestFullscreen();
+    } else if (element.mozRequestFullScreen) {
+      element.mozRequestFullScreen();
+    } else if (element.webkitRequestFullscreen) {
+      element.webkitRequestFullscreen();
+    } else if (element.msRequestFullscreen) {
+      element.msRequestFullscreen();
     }
-
-    //14-5 pt mm-ss
-    //15-4 pt m-ss
-    //11-8 pt hh-mm-ss
-    //12-7 pt h-mm-ss
   };
-
-  const handleChange = (e, newValue) => {
-    calcTime(newValue);
-    setValue(newValue);
-  };
-
-  const handleMouseMove = (e) => {
-    //conditie sa fie mai > 0
-    if (
-      e.nativeEvent.offsetX >= 0 &&
-      e.nativeEvent.offsetX <= hoverRef.current.offsetWidth
-    ) {
-      let hoverValue = e.nativeEvent.offsetX;
-      let elLength = hoverRef.current.offsetWidth;
-
-      let percent = (hoverValue * 100) / elLength;
-
-      //extragem x% din lung video(in secunde)
-
-      let seconds = (percent / 100) * store.duration;
-
-      calcTime(seconds * 1000);
+  const deactivateFullscreen = () => {
+    if (document.exitFullscreen) {
+      document.exitFullscreen();
+    } else if (document.mozCancelFullScreen) {
+      document.mozCancelFullScreen();
+    } else if (document.webkitExitFullscreen) {
+      document.webkitExitFullscreen();
     }
   };
 
+  const verify = () => {
+    if (store.fullscreenPressed === false || store.fullscreenPressed === null) {
+      activateFullscreen(store.divRef);
+      store.setFullscreenPressed(true);
+    } else if (store.fullscreenPressed === true) {
+      deactivateFullscreen();
+      store.setFullscreenPressed(false);
+    }
+  };
+
+  const handleVolumeChange = (e, newValue) => {
+    setVolumeValue(newValue);
+    store.setVolume(newValue / 100);
+  };
+  const handleOpenSettings = (e) => {
+    setSettingsAnchor(e.currentTarget);
+  };
+  const handleCloseSettings = () => {
+    setSettingsAnchor(null);
+  };
+  const handleSpeedChange = (e) => {
+    store.setPlaybackSpeed(e.target.value);
+  };
   return (
     <div className="controls">
-      <Tooltip placement="top" title={currentTime}>
-        <span ref={hoverRef} onMouseMove={(e) => handleMouseMove(e)}>
-          {/* la label slider afisam timpul la care suntem convertit in format h:m:s */}
+      <Grid
+        container
+        spacing={2}
+        direction="row"
+        justify="center"
+        alignItems="center"
+      >
+        <IconButton onClick={() => store.setIsPlaying(true)}>
+          <PlayCircleFilledIcon />
+        </IconButton>
+
+        <IconButton onClick={() => store.setIsPlaying(false)}>
+          <PauseCircleFilledIcon />
+        </IconButton>
+
+        <Grid item>
+          <IconButton>
+            <VolumeUpIcon />
+          </IconButton>
+        </Grid>
+        <Grid item xs={3}>
           <Slider
-            value={value}
-            aria-label="continuous-slider"
             min={0}
-            max={store.duration * 1000} //milisecunde
-            onChange={handleChange}
-            // valueLabelDisplay="auto"
-            onMouseEnter={(e) => setValue(e.target.value)}
+            max={100}
+            value={volumeValue}
+            onChange={handleVolumeChange}
+            aria-label="volume-slider"
           />
-        </span>
-      </Tooltip>
+        </Grid>
 
-      <IconButton>
-        <PlayCircleFilledIcon />
-      </IconButton>
+        <IconButton onClick={handleOpenSettings}>
+          <SettingsIcon />
+        </IconButton>
+        <Menu
+          id="settings-menu"
+          anchorEl={settingsAnchor}
+          keepMounted
+          open={Boolean(settingsAnchor)}
+          onClose={handleCloseSettings}
+        >
+          <MenuItem>
+            Playback Speed:{" "}
+            <Select
+              native
+              value={store.playbackSpeed}
+              onChange={handleSpeedChange}
+            >
+              {speedOptions.map((option) => (
+                <option key={`speed-${option}`} value={option}>
+                  {option}x
+                </option>
+              ))}
+            </Select>
+          </MenuItem>
+        </Menu>
 
-      <IconButton>
-        <SkipNextIcon />
-      </IconButton>
-
-      <IconButton>
-        <VolumeUpIcon />
-      </IconButton>
-
-      <IconButton>
-        <SettingsIcon />
-      </IconButton>
-
-      <IconButton>
-        <FullscreenIcon />
-      </IconButton>
+        <IconButton onClick={verify}>
+          <FullscreenIcon />
+        </IconButton>
+      </Grid>
     </div>
   );
-};
+});
 
 export default Controls;

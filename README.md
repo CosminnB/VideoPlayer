@@ -1,3 +1,15 @@
+### Ce am implementat
+1. Progress bar cu timestamp la hover
+2. Play/Pause din buton sau click video
+3. Playback speed settings
+4. Buton sunet
+5. Optiune fullscreen
+6. Ascundere controale dupa 4s de inactivitate sau parasirea player-ului
+
+### Ce nu am implementat
+1. Timer pentru timp curent/timp total
+2. Optiunea de iesire din fullscreen prin ESC
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).

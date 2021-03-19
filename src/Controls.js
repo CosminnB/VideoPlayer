@@ -76,8 +76,9 @@ const Controls = observer(() => {
   const handleSpeedChange = (e) => {
     store.setPlaybackSpeed(e.target.value);
   };
+
   return (
-    <div className="controls">
+    <div className={`controls ${store.isIdle ? "hideElements" : ""}`}>
       <div className="controls__left">
         {store.isPlaying === false || store.isPlaying === null ? (
           <IconButton onClick={() => store.setIsPlaying(true)}>
@@ -88,6 +89,7 @@ const Controls = observer(() => {
             <PauseCircleFilledIcon />
           </IconButton>
         )}
+
         <div className="controls__volume">
           <IconButton
             onMouseEnter={() => setShowVolume(true)}
@@ -96,18 +98,22 @@ const Controls = observer(() => {
             {store.volume > 0 ? <VolumeUpIcon /> : <VolumeOffIcon />}
           </IconButton>
 
-          {showVolume && (
-            <Slider
-              onMouseEnter={() => setShowVolume(true)}
-              onMouseLeave={() => setShowVolume(false)}
-              className="controls__volumeSlider"
-              min={0}
-              max={100}
-              value={volumeValue}
-              onChange={handleVolumeChange}
-              aria-label="volume-slider"
-            />
-          )}
+          <Slider
+            onMouseEnter={() => setShowVolume(true)}
+            onMouseLeave={() => setShowVolume(false)}
+            className={`${
+              !store.isIdle
+                ? `controls__volumeSliderHidden ${
+                    showVolume ? "controls__volumeSlider" : ""
+                  }`
+                : "hideElements"
+            }`}
+            min={0}
+            max={100}
+            value={volumeValue}
+            onChange={handleVolumeChange}
+            aria-label="volume-slider"
+          />
         </div>
       </div>
       <div className="controls__right" ref={containerRef}>

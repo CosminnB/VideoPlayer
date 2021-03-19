@@ -35,7 +35,7 @@ const VideoPlayer = observer(() => {
   return (
     <div className="player" ref={playerRef}>
       <Video />
-      <Controls />
+      {/* <Controls /> */}
     </div>
   );
 });

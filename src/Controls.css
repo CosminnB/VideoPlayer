@@ -7,19 +7,36 @@
   bottom: 1vh;
   z-index: 49;
   margin-top: 2px;
+  height: 7vh;
+}
+.hideElements {
+  visibility: hidden !important;
 }
 .controls__volume {
   display: flex;
   align-items: center;
   width: 50% !important;
 }
-.controls__volumeSlider {
-  width: 30% !important;
+.controls__volumeSliderHidden {
+  visibility: hidden !important;
+  opacity: 0 !important;
+  transition: visibility 0s, opacity 0.2s linear !important;
 }
+.controls__volumeSlider {
+  visibility: visible !important;
+  width: 30% !important;
+  opacity: 1 !important;
+}
+
 .controls__left,
 .controls__right {
   display: flex;
 }
 .controls__left {
   flex: 1;
+}
+
+.MuiSvgIcon-root {
+  font-size: 1.8rem !important;
+  color: rgba(255, 255, 255, 0.9);
 }

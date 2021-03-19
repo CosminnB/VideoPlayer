@@ -5,7 +5,8 @@ function App() {
   const store = new VideoStore();
   return (
     <StoreProvider store={store}>
-      <div className="App">
+      <div className="app">
+        <h1 className="app__title">The VideoPlayer</h1>
         <VideoPlayer />
       </div>
     </StoreProvider>

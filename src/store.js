@@ -8,6 +8,7 @@ class VideoStore {
   divRef = null;
   anchorRef = null;
   tooltipAnchor = null;
+  isIdle = false;
 
   constructor() {
     makeAutoObservable(this);
@@ -33,6 +34,9 @@ class VideoStore {
   }
   setTooltipAnchor(ref) {
     this.tooltipAnchor = ref;
+  }
+  setIsIdle(bool) {
+    this.isIdle = bool;
   }
 }
 

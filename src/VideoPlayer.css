@@ -4,7 +4,9 @@
   margin-right: auto;
   width: 70vw;
   position: relative;
-  border: 2px solid black;
+}
+.hideCursor {
+  cursor: none !important;
 }
 /* .player__video {
   display: block;
@@ -13,5 +15,5 @@
 .player:fullscreen,
 .player:-webkit-full-screen,
 .player:-moz-full-screen {
-  background-color: grey;
+  background-color: black;
 }

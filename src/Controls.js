@@ -6,14 +6,7 @@ import SettingsIcon from "@material-ui/icons/Settings";
 import FullscreenIcon from "@material-ui/icons/Fullscreen";
 import PauseCircleFilledIcon from "@material-ui/icons/PauseCircleFilled";
 import VolumeOffIcon from "@material-ui/icons/VolumeOff";
-import {
-  Slider,
-  IconButton,
-  Grid,
-  Menu,
-  MenuItem,
-  Select,
-} from "@material-ui/core";
+import { Slider, IconButton, Menu, MenuItem, Select } from "@material-ui/core";
 import { useStore } from "./store";
 import { observer } from "mobx-react-lite";
 

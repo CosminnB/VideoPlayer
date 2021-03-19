@@ -1,4 +1,4 @@
-import { Tooltip, withStyles } from "@material-ui/core";
+import { Tooltip } from "@material-ui/core";
 import { observer } from "mobx-react-lite";
 import Slider from "@material-ui/core/Slider";
 import React, { useEffect, useRef, useState } from "react";
@@ -62,7 +62,7 @@ const Video = observer(() => {
 
     let hours = data.substr(11, 2);
     let mins = data.substr(14, 2);
-    let secs = data.substr(17, 2);
+    // let secs = data.substr(17, 2);
 
     if (hours === "00" && mins === "00") {
       setCurrentTooltipTime(data.substr(15, 4));

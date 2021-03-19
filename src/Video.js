@@ -1,17 +1,19 @@
 import { Slider, Tooltip } from "@material-ui/core";
 import { observer } from "mobx-react-lite";
 import React, { useEffect, useRef, useState } from "react";
-import "./Controls.css";
+import "./Video.css";
 import { useStore } from "./store";
 
 const Video = observer(() => {
   const videoRef = useRef(null);
   const hoverRef = useRef(null);
+  const containerRef = useRef(null);
   const [currentTooltipTime, setCurrentTooltipTime] = useState("0:00");
   const [sliderValue, setSliderValue] = useState(null);
   const store = useStore();
 
   useEffect(() => {
+    store.setTooltipAnchor(containerRef.current);
     if (store.isPlaying) {
       videoRef.current.play();
     } else {
@@ -21,7 +23,13 @@ const Video = observer(() => {
     videoRef.current.volume = store.volume;
 
     videoRef.current.playbackRate = store.playbackSpeed;
-  }, [store.isPlaying, store.volume, store.playbackSpeed, store.fullscreen]);
+  }, [
+    store.isPlaying,
+    store.volume,
+    store.playbackSpeed,
+    store.fullscreen,
+    store.tooltipAnchor,
+  ]);
 
   const calcTime = (seconds) => {
     let data = new Date(Math.floor(seconds)).toISOString();
@@ -74,16 +82,24 @@ const Video = observer(() => {
   };
 
   return (
-    <div>
+    <div className="video__wrapper">
       <video
         ref={videoRef}
-        className="player__video"
+        className={`video__source ${
+          store.fullscreenPressed && "video__fullscreen"
+        }`}
         onTimeUpdate={seektimeupdate}
       >
-        <source src="/videos/video2.mp4" type="video/mp4" />
+        <source src="/videos/video3.mp4" type="video/mp4" />
       </video>
 
-      <Tooltip placement="top" title={currentTooltipTime}>
+      <Tooltip
+        className="video__timeline"
+        placement="top"
+        ref={containerRef}
+        title={currentTooltipTime}
+        PopperProps={{ container: store.tooltipAnchor }}
+      >
         <span ref={hoverRef} onMouseMove={(e) => handleHoverSeeking(e)}>
           {/* la label slider afisam timpul la care suntem convertit in format h:m:s */}
           <Slider
@@ -95,6 +111,18 @@ const Video = observer(() => {
           />
         </span>
       </Tooltip>
+      <img
+        className={`play__shadow ${store.isPlaying ? "play__animate" : ""}`}
+        src="/svg/play.svg"
+        alt="playVideo"
+      />
+      <img
+        className={`pause__shadow ${
+          store.isPlaying === false ? "pause__animate" : ""
+        }`}
+        src="/svg/pause.svg"
+        alt="pauseVideo"
+      />
     </div>
   );
 });

@@ -1,9 +1,25 @@
-.MuiSlider-thumb {
-  z-index: -1;
+.controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: absolute;
+  width: 100%;
+  bottom: 1vh;
+  z-index: 49;
+  margin-top: 2px;
 }
-/* .MuiSlider-rail {
-  height: 4px !important;
+.controls__volume {
+  display: flex;
+  align-items: center;
+  width: 50% !important;
 }
-.MuiSlider-rail:hover {
-  height: 6px !important;
-} */
+.controls__volumeSlider {
+  width: 30% !important;
+}
+.controls__left,
+.controls__right {
+  display: flex;
+}
+.controls__left {
+  flex: 1;
+}

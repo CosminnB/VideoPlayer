@@ -5,9 +5,9 @@ import VolumeUpIcon from "@material-ui/icons/VolumeUp";
 import SettingsIcon from "@material-ui/icons/Settings";
 import FullscreenIcon from "@material-ui/icons/Fullscreen";
 import PauseCircleFilledIcon from "@material-ui/icons/PauseCircleFilled";
+import VolumeOffIcon from "@material-ui/icons/VolumeOff";
 import {
   Slider,
-  Tooltip,
   IconButton,
   Grid,
   Menu,
@@ -18,16 +18,19 @@ import { useStore } from "./store";
 import { observer } from "mobx-react-lite";
 
 const Controls = observer(() => {
-  // useEffect(() => {
-  //   window.addEventListener("keydown", (event) => {
-  //     console.log(event.key);
-  //   });
-  // }, []);
+  useEffect(() => {
+    // window.addEventListener("keydown", (event) => {
+    //   console.log(event.key);
+    // });
+    store.setAnchorRef(containerRef.current);
+  }, []);
 
   const speedOptions = [0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2];
   const store = useStore();
   const [volumeValue, setVolumeValue] = useState(100);
   const [settingsAnchor, setSettingsAnchor] = useState(null);
+  const [showVolume, setShowVolume] = useState(false);
+  const containerRef = useRef(null);
 
   const activateFullscreen = (element) => {
     if (element.requestFullscreen) {
@@ -75,45 +78,48 @@ const Controls = observer(() => {
   };
   return (
     <div className="controls">
-      <Grid
-        container
-        spacing={2}
-        direction="row"
-        justify="center"
-        alignItems="center"
-      >
-        <IconButton onClick={() => store.setIsPlaying(true)}>
-          <PlayCircleFilledIcon />
-        </IconButton>
-
-        <IconButton onClick={() => store.setIsPlaying(false)}>
-          <PauseCircleFilledIcon />
-        </IconButton>
-
-        <Grid item>
-          <IconButton>
-            <VolumeUpIcon />
+      <div className="controls__left">
+        {store.isPlaying === false || store.isPlaying === null ? (
+          <IconButton onClick={() => store.setIsPlaying(true)}>
+            <PlayCircleFilledIcon />
           </IconButton>
-        </Grid>
-        <Grid item xs={3}>
-          <Slider
-            min={0}
-            max={100}
-            value={volumeValue}
-            onChange={handleVolumeChange}
-            aria-label="volume-slider"
-          />
-        </Grid>
+        ) : (
+          <IconButton onClick={() => store.setIsPlaying(false)}>
+            <PauseCircleFilledIcon />
+          </IconButton>
+        )}
+        <div className="controls__volume">
+          <IconButton
+            onMouseEnter={() => setShowVolume(true)}
+            onMouseLeave={() => setShowVolume(false)}
+          >
+            {store.volume > 0 ? <VolumeUpIcon /> : <VolumeOffIcon />}
+          </IconButton>
 
+          {showVolume && (
+            <Slider
+              onMouseEnter={() => setShowVolume(true)}
+              onMouseLeave={() => setShowVolume(false)}
+              className="controls__volumeSlider"
+              min={0}
+              max={100}
+              value={volumeValue}
+              onChange={handleVolumeChange}
+              aria-label="volume-slider"
+            />
+          )}
+        </div>
+      </div>
+      <div className="controls__right" ref={containerRef}>
         <IconButton onClick={handleOpenSettings}>
           <SettingsIcon />
         </IconButton>
         <Menu
           id="settings-menu"
-          anchorEl={settingsAnchor}
-          keepMounted
+          anchorEl={store.anchorRef}
           open={Boolean(settingsAnchor)}
           onClose={handleCloseSettings}
+          container={store.anchorRef}
         >
           <MenuItem>
             Playback Speed:{" "}
@@ -124,7 +130,7 @@ const Controls = observer(() => {
             >
               {speedOptions.map((option) => (
                 <option key={`speed-${option}`} value={option}>
-                  {option}x
+                  x{option}
                 </option>
               ))}
             </Select>
@@ -134,7 +140,7 @@ const Controls = observer(() => {
         <IconButton onClick={verify}>
           <FullscreenIcon />
         </IconButton>
-      </Grid>
+      </div>
     </div>
   );
 });

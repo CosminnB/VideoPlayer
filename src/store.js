@@ -1,11 +1,13 @@
 import { makeAutoObservable } from "mobx";
 import React, { createContext, useContext } from "react";
 class VideoStore {
-  isPlaying = false;
+  isPlaying = null;
   volume = 1;
   playbackSpeed = 1;
   fullscreenPressed = null;
   divRef = null;
+  anchorRef = null;
+  tooltipAnchor = null;
 
   constructor() {
     makeAutoObservable(this);
@@ -25,6 +27,12 @@ class VideoStore {
   }
   setDivRef(ref) {
     this.divRef = ref;
+  }
+  setAnchorRef(ref) {
+    this.anchorRef = ref;
+  }
+  setTooltipAnchor(ref) {
+    this.tooltipAnchor = ref;
   }
 }
 

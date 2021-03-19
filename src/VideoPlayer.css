@@ -1,8 +1,17 @@
 .player {
-  margin: auto;
-  width: 50vw;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 70vw;
+  position: relative;
+  border: 2px solid black;
 }
-.player__video {
+/* .player__video {
   display: block;
   width: 50vw;
+} */
+.player:fullscreen,
+.player:-webkit-full-screen,
+.player:-moz-full-screen {
+  background-color: grey;
 }

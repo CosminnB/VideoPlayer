@@ -1,4 +1,3 @@
-import { SortTwoTone } from "@material-ui/icons";
 import { observer } from "mobx-react-lite";
 import React, { useEffect, useRef } from "react";
 import Controls from "./Controls";

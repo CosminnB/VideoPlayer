@@ -11,19 +11,15 @@ import { useStore } from "./store";
 import { observer } from "mobx-react-lite";
 
 const Controls = observer(() => {
-  useEffect(() => {
-    // window.addEventListener("keydown", (event) => {
-    //   console.log(event.key);
-    // });
-    store.setAnchorRef(containerRef.current);
-  }, []);
-
   const speedOptions = [0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2];
   const store = useStore();
   const [volumeValue, setVolumeValue] = useState(100);
   const [settingsAnchor, setSettingsAnchor] = useState(null);
   const [showVolume, setShowVolume] = useState(false);
   const containerRef = useRef(null);
+  useEffect(() => {
+    store.setAnchorRef(containerRef.current);
+  }, []);
 
   const activateFullscreen = (element) => {
     if (element.requestFullscreen) {
@@ -47,7 +43,11 @@ const Controls = observer(() => {
   };
 
   const verify = () => {
-    if (store.fullscreenPressed === false || store.fullscreenPressed === null) {
+    if (
+      store.fullscreenPressed === false ||
+      store.fullscreenPressed === null ||
+      !document.fullscreenElement
+    ) {
       activateFullscreen(store.divRef);
       store.setFullscreenPressed(true);
     } else if (store.fullscreenPressed === true) {
@@ -82,6 +82,10 @@ const Controls = observer(() => {
             <PauseCircleFilledIcon />
           </IconButton>
         )}
+
+        <p>
+          {store.currentTime}/{store.duration}
+        </p>
 
         <div className="controls__volume">
           <IconButton

@@ -57,21 +57,30 @@ const Video = observer(() => {
     };
   }, []);
 
-  const calcTime = (seconds, option) => {
-    let data = new Date(Math.floor(seconds)).toISOString();
+  const calcTime = (miliseconds, option) => {
+    let data = new Date(miliseconds).toISOString();
+    console.log(data, "data din time");
 
     let hours = data.substr(11, 2);
     let mins = data.substr(14, 2);
     // let secs = data.substr(17, 2);
-
-    if (hours === "00" && mins === "00") {
-      setCurrentTooltipTime(data.substr(15, 4));
-    } else if (hours === "00" && mins !== "00") {
-      setCurrentTooltipTime(data.substr(14, 5));
-    } else if (hours !== "00") {
-      setCurrentTooltipTime(data.substr(11, 8));
+    if (option === "timer") {
+      if (hours === "00" && mins === "00") {
+        return data.substr(15, 4);
+      } else if (hours === "00" && mins !== "00") {
+        return data.substr(14, 5);
+      } else if (hours !== "00") {
+        return data.substr(11, 8);
+      }
+    } else {
+      if (hours === "00" && mins === "00") {
+        setCurrentTooltipTime(data.substr(15, 4));
+      } else if (hours === "00" && mins !== "00") {
+        setCurrentTooltipTime(data.substr(14, 5));
+      } else if (hours !== "00") {
+        setCurrentTooltipTime(data.substr(11, 8));
+      }
     }
-
     //14-5 pt mm:ss
     //15-4 pt m:ss
     //11-8 pt hh:mm:ss
@@ -105,6 +114,10 @@ const Video = observer(() => {
   const seektimeupdate = () => {
     let n = videoRef.current.currentTime * (100 / videoRef.current.duration);
 
+    store.setCurrentTime(
+      calcTime(videoRef.current.currentTime * 1000, "timer")
+    );
+
     setSliderValue(n);
     if (videoRef.current.currentTime === videoRef.current.duration) {
       store.setIsPlaying(false);
@@ -120,9 +133,19 @@ const Video = observer(() => {
     >
       <div
         className={`overlay ${store.isIdle ? "hideCursor hideElements" : ""}`}
+        onClick={(e) => {
+          if (store.isPlaying === false || store.isPlaying === null) {
+            store.setIsPlaying(true);
+          } else {
+            store.setIsPlaying(false);
+          }
+        }}
       ></div>
       <video
-        onClick={() => {
+        onLoadedMetadata={() =>
+          store.setDuration(calcTime(videoRef.current.duration * 1000, "timer"))
+        }
+        onClick={(e) => {
           if (store.isPlaying === false || store.isPlaying === null) {
             store.setIsPlaying(true);
           } else {
@@ -189,7 +212,7 @@ const Video = observer(() => {
         } ${store.isIdle ? "hideElements" : ""}`}
         src="/svg/pause.svg"
         alt="pauseVideo"
-        onClick={() => {
+        onClick={(e) => {
           if (store.isPlaying === false || store.isPlaying === null) {
             store.setIsPlaying(true);
           } else {

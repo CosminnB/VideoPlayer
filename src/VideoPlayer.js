@@ -7,14 +7,12 @@ const VideoPlayer = observer(() => {
   const playerRef = useRef(null);
   const store = useStore();
   useEffect(() => {
-    // console.log(store.fullscreenPressed);
     store.setDivRef(playerRef.current);
-  }, []); //store.fullscreenPressed
+  }, [playerRef]);
 
   return (
     <div className="player" ref={playerRef}>
       <Video />
-      {/* <Controls /> */}
     </div>
   );
 });

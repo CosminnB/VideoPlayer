@@ -9,6 +9,8 @@ class VideoStore {
   anchorRef = null;
   tooltipAnchor = null;
   isIdle = false;
+  currentTime = "0:00";
+  duration = "0:00";
 
   constructor() {
     makeAutoObservable(this);
@@ -37,6 +39,12 @@ class VideoStore {
   }
   setIsIdle(bool) {
     this.isIdle = bool;
+  }
+  setCurrentTime(time) {
+    this.currentTime = time;
+  }
+  setDuration(time) {
+    this.duration = time;
   }
 }
 

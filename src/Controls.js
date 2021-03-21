@@ -91,6 +91,13 @@ const Controls = observer(() => {
           <IconButton
             onMouseEnter={() => setShowVolume(true)}
             onMouseLeave={() => setShowVolume(false)}
+            onClick={(e) => {
+              if (store.volume > 0) {
+                handleVolumeChange(e, 0);
+              } else {
+                handleVolumeChange(e, 100);
+              }
+            }}
           >
             {store.volume > 0 ? <VolumeUpIcon /> : <VolumeOffIcon />}
           </IconButton>

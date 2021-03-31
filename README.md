@@ -1,11 +1,11 @@
 ### Ce am implementat
-1. Progress bar cu timestamp la hover
-2. Play/Pause din buton sau click video
+1. Progress bar with timestamp on hover
+2. Play/Pause using button or click on video
 3. Playback speed settings
-4. Slider sunet
-5. Optiune fullscreen
-6. Ascundere controale dupa 4s de inactivitate sau parasirea player-ului
-7. Timer pentru timp curent/timp total
+4. Sound slider
+5. Fullscreen option
+6. Hiding control after 4s of inactivity or cursor leaving player.
+7. Timer for current time/total time
 
 
 

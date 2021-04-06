@@ -1,4 +1,4 @@
-### Ce am implementat
+### Built Functionalities
 1. Progress bar with timestamp on hover
 2. Play/Pause using button or click on video
 3. Playback speed settings
